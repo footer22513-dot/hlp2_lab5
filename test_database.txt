@@ -1,0 +1,45 @@
+# Test database for hlp2_lab5
+#
+# Copy sections into the corresponding runtime files if you need to load
+# this sample data in the console app.
+
+[workers.txt]
+Ivan Petrov 35 ivanp pass12345 Engineer
+Maria Sokolova 29 marias pass12345 Accountant
+Pavel Orlov 41 pavelor pass12345 Manager
+Anna Smirnova 24 annas pass12345 Operator
+
+[suppliers.txt]
+Electro Market 33 electro pass12345 Electronics
+Food Line 50 foodln pass12345 Food
+Steel Trade 45 steelco pass12345 Metal
+Wood Master 38 woodco pass12345 Wood
+
+[production.txt]
+Bolt 1000 12.5 2026-05-20
+Panel 300 250 2026-05-21
+Cable 500 40 2026-05-22
+Chair 150 180 2026-05-23
+
+[sales.txt]
+Bolt 400 25 2026-05-25
+Panel 120 420 2026-05-26
+Cable 210 75 2026-05-27
+Chair 70 350 2026-05-28
+
+[electro_products.txt]
+Sensor Electronics 750 45
+Cable Electronics 40 500
+
+[foodln_products.txt]
+Flour Food 55 1000
+Sugar Food 70 800
+Butter Food 120 77
+
+[steelco_products.txt]
+Rebar Metal 950 120
+Sheet Metal 1300 60
+
+[woodco_products.txt]
+Board Wood 300 200
+Beam Wood 550 80
