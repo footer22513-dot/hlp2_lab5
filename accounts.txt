@@ -1,3 +1,0 @@
-admin admin1234 worker
-ivanov pass1234 supplier
-navapavel qwerty123 worker
