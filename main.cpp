@@ -43,12 +43,12 @@ void demo_complex_polymorphism() {
     delete item;
 }
 
-bool run_auth(AuthSystem &auth) {
+bool run_auth(AuthSystem &auth, string &role) {
   cout << "\n================================================" << endl;
   cout << "  АВТОРИЗАЦИЯ" << endl;
   cout << "================================================" << endl;
 
-  string login, pass, role;
+  string login, pass;
   int attempts = 3;
 
   while (attempts > 0) {
@@ -80,18 +80,35 @@ bool run_auth(AuthSystem &auth) {
   return false;
 }
 
+int run_role_menu(const string &title, CMenuItem *items, size_t count) {
+  CMenu menu(title, items, count);
+  bool is_running = true;
+  while (is_running) {
+    try {
+      is_running = menu.runCommand();
+    } catch (const AppException &e) {
+      cout << e.what() << endl;
+    } catch (const exception &e) {
+      cout << "[Стандартное исключение] " << e.what() << endl;
+    }
+  }
+  return 0;
+}
+
 int main() {
   try {
 
   AuthSystem auth("accounts.txt");
-  if (!run_auth(auth)) {
+  string role;
+  if (!run_auth(auth, role)) {
     cout << "Выход из программы." << endl;
     return 1;
   }
   load_users_from_files();
 
-  const int ITEMS_NUMBER = 19;
-  CMenuItem items[ITEMS_NUMBER]{
+  if (role == "admin") {
+    const int ITEMS_NUMBER = 19;
+    CMenuItem items[ITEMS_NUMBER]{
       CMenuItem{"Показать всех сотрудников", menu_show_all_workers},
       CMenuItem{"Показать всех поставщиков", menu_show_all_suppliers},
       CMenuItem{"Загрузить базу", menu_load_database},
@@ -111,20 +128,41 @@ int main() {
       CMenuItem{"Добавить запись продажи", menu_add_sale},
       CMenuItem{"Создать отчет", menu_create_report},
       CMenuItem{"Добавить товар поставщику", menu_add_product_to_supplier}};
-
-  CMenu menu("=== СИСТЕМА УПРАВЛЕНИЯ ===", items, ITEMS_NUMBER);
-  bool is_running = true;
-  while (is_running) {
-    try {
-      is_running = menu.runCommand();
-    } catch (const AppException &e) {
-      cout << e.what() << endl;
-    } catch (const exception &e) {
-      cout << "[Стандартное исключение] " << e.what() << endl;
-    }
+    return run_role_menu("=== МЕНЮ АДМИНИСТРАТОРА ===", items, ITEMS_NUMBER);
   }
 
-  return 0;
+  if (role == "worker") {
+    const int ITEMS_NUMBER = 12;
+    CMenuItem items[ITEMS_NUMBER]{
+      CMenuItem{"Показать всех сотрудников", menu_show_all_workers},
+      CMenuItem{"Показать всех поставщиков", menu_show_all_suppliers},
+      CMenuItem{"Поиск сотрудников", menu_search_workers},
+      CMenuItem{"Поиск поставщиков", menu_search_suppliers},
+      CMenuItem{"Сортировка", menu_sort},
+      CMenuItem{"Показать производство", menu_show_production},
+      CMenuItem{"Показать продажи", menu_show_sales},
+      CMenuItem{"Добавить запись производства", menu_add_production},
+      CMenuItem{"Добавить запись продажи", menu_add_sale},
+      CMenuItem{"Создать отчет", menu_create_report},
+      CMenuItem{"Загрузить базу", menu_load_database},
+      CMenuItem{"Выгрузить базу", menu_unload_database}};
+    return run_role_menu("=== МЕНЮ СОТРУДНИКА ===", items, ITEMS_NUMBER);
+  }
+
+  if (role == "supplier") {
+    const int ITEMS_NUMBER = 6;
+    CMenuItem items[ITEMS_NUMBER]{
+      CMenuItem{"Показать всех поставщиков", menu_show_all_suppliers},
+      CMenuItem{"Поиск поставщиков", menu_search_suppliers},
+      CMenuItem{"Показать производство", menu_show_production},
+      CMenuItem{"Показать продажи", menu_show_sales},
+      CMenuItem{"Добавить товар поставщику", menu_add_product_to_supplier},
+      CMenuItem{"Выгрузить базу", menu_unload_database}};
+    return run_role_menu("=== МЕНЮ ПОСТАВЩИКА ===", items, ITEMS_NUMBER);
+  }
+
+  throw AppException(ExceptionType::Logic,
+                     "Для роли \"" + role + "\" не настроено меню.");
   } catch (const AppException &e) {
     cout << e.what() << endl;
   } catch (const exception &e) {

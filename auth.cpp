@@ -20,6 +20,10 @@ static void validate_account_fields(const string &log, const string &pass,
     throw AppException(ExceptionType::Input,
                        "Роль не должна быть пустой.");
   }
+  if (role != "admin" && role != "worker" && role != "supplier") {
+    throw AppException(ExceptionType::Input,
+                       "Неизвестная роль аккаунта.");
+  }
 }
 
 AuthSystem::AuthSystem(const string &filename) { load_from_file(filename); }
