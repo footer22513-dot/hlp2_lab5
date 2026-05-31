@@ -1,8 +1,3 @@
-# Test database for hlp2_lab5
-#
-# Copy sections into the corresponding runtime files if you need to load
-# this sample data in the console app.
-
 [workers.txt]
 Ivan Petrov 35 ivanp pass12345 Engineer
 Maria Sokolova 29 marias pass12345 Accountant
