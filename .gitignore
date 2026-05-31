@@ -1,0 +1,13 @@
+app
+app.out
+*.btt
+.DS_Store
+
+production.txt
+sales.txt
+report.txt
+workers.txt
+suppliers.txt
+*_products.txt
+
+vp_dz2/
