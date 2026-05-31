@@ -19,7 +19,6 @@ public:
   void show_info() override;
   void do_work() override;
 
-  // Операторы сравнения (по фамилии)
   bool operator<(const employee& other) const { return Get_last_name() < other.Get_last_name(); }
   bool operator>(const employee& other) const { return Get_last_name() > other.Get_last_name(); }
   bool operator==(const employee& other) const { return Get_last_name() == other.Get_last_name(); }

@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <utility>
 
-// Шаблонный итератор
 template <typename T> class vec_iterator {
 private:
   T *m_ptr;
@@ -34,7 +33,6 @@ public:
   }
 };
 
-// Шаблонный вектор
 template <typename T> class my_vec {
 private:
   T *m_data;

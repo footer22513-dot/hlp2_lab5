@@ -1,5 +1,5 @@
 
-
+#include "app_exception.h"
 #include "worker.h"
 #include <iostream>
 #include <string>
@@ -9,17 +9,23 @@ using namespace std;
 worker::worker(string fName, string lName, int a, string log, string pass,
                string pos)
     : user(fName, lName, a, log, pass), grade(pos) {
-  cout << "Сотрудник " << fName << " " << lName
-       << " принят на должность: " << pos << endl;
+  if (grade.empty()) {
+    throw AppException(ExceptionType::Input,
+                       "Должность не должна быть пустой.");
+  }
 }
 
-worker::~worker() {
-  cout << "Сотрудник " << Get_first_name() << " уволен" << endl;
-}
+worker::~worker() {}
 
 string worker::get_grade() const { return grade; }
 
-void worker::set_grade(string pos) { grade = pos; }
+void worker::set_grade(string pos) {
+  if (pos.empty()) {
+    throw AppException(ExceptionType::Input,
+                       "Должность не должна быть пустой.");
+  }
+  grade = pos;
+}
 
 void worker::show_info() {
   cout << "\n===  СОТРУДНИКА ===" << endl;

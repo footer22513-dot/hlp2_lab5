@@ -14,7 +14,6 @@ public:
            string grade);
     ~worker();
 
-    // getter + setter
     string get_grade() const;
     void set_grade(string grade);
 

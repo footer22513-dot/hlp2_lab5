@@ -10,8 +10,7 @@ using namespace std;
 namespace GNA {
     class CMenu {
     public:
-        CMenu(string, CMenuItem *, size_t); // конструктор класса
-                                            //
+        CMenu(string, CMenuItem *, size_t);
         int getSelect() const;
         int runCommand();
 
@@ -20,7 +19,7 @@ namespace GNA {
         string getTitle();
         size_t getCount() const;
 
-        CMenuItem *getItems(); // передача указателя на объект класса CmenuItem
+        CMenuItem *getItems();
 
         void print();
         
@@ -31,6 +30,6 @@ namespace GNA {
         size_t count{};
         bool running{};
         string title{};
-        CMenuItem *items{}; // аналагично // массив обьектов 
+        CMenuItem *items{};
     };
 }

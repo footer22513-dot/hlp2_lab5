@@ -24,7 +24,6 @@ public:
     my_vec<product>& get_products();
     void add_product(const product& p);
 
-  // Операторы сравнения (по фамилии)
   bool operator<(const supplier& other) const { return Get_last_name() < other.Get_last_name(); }
   bool operator>(const supplier& other) const { return Get_last_name() > other.Get_last_name(); }
   bool operator==(const supplier& other) const { return Get_last_name() == other.Get_last_name(); }

@@ -1,3 +1,4 @@
+#include "app_exception.h"
 #include "product.h"
 #include <iostream>
 #include <string>
@@ -5,45 +6,68 @@ using namespace std;
 
 product::product(string n, string type, double p, int c)
     : name(n), type(type), price(p), count(c) {
-  if (n != "") {
-    cout << "Объект с именем " << n << " создан" << endl;
+  bool default_product = name.empty() && type.empty() && price == 0.0 && count == 0;
+  if (!default_product && (name.empty() || type.empty())) {
+    throw AppException(ExceptionType::Input,
+                       "Название и тип товара не должны быть пустыми.");
+  }
+  if (price < 0) {
+    throw AppException(ExceptionType::Range,
+                       "Цена не может быть отрицательной.");
+  }
+  if (count < 0) {
+    throw AppException(ExceptionType::Range,
+                       "Количество товара не может быть отрицательным.");
   }
 }
 
-product::~product() { 
-  if (name != "") {
-    cout << "Объект " << name << " уничтожен" << endl;
-  }
-}
+product::~product() {}
 
-// геттеры
 string product::get_name() const { return name; }
 string product::get_type() const { return type; }
 double product::get_price() const { return price; }
 int product::get_count() const { return count; }
 double product::get_total_value() const { return price * count; }
 
-// сеттеры
+void product::set_name(string n) {
+  if (n.empty()) {
+    throw AppException(ExceptionType::Input,
+                       "Название товара не должно быть пустым.");
+  }
+  name = n;
+}
 
-void product::set_name(string n) { name = n; }
-void product::set_type(string t) { type = t; }
+void product::set_type(string t) {
+  if (t.empty()) {
+    throw AppException(ExceptionType::Input,
+                       "Тип товара не должен быть пустым.");
+  }
+  type = t;
+}
 
 void product::set_price(double p) {
   if (p < 0) {
-    cout << "Цена не может быть отрицательной" << endl;
-    return;
+    throw AppException(ExceptionType::Range,
+                       "Цена не может быть отрицательной.");
   }
   price = p;
 }
 
-void product::set_count(int c) { count = c; }
+void product::set_count(int c) {
+  if (c < 0) {
+    throw AppException(ExceptionType::Range,
+                       "Количество товара не может быть отрицательным.");
+  }
+  count = c;
+}
 
 void product::add_to_stock(int c) {
   if (c > 0) {
     count += c;
     cout << "Добавлено " << c << " шт." << endl;
   } else {
-    cout << "Нельзя добавить отрицательное кол-во!" << endl;
+    throw AppException(ExceptionType::Range,
+                       "Количество для добавления должно быть положительным.");
   }
 }
 
@@ -52,7 +76,8 @@ void product::remove_from_stock(int c) {
     count -= c;
     cout << "Удалено " << c << " шт." << endl;
   } else {
-    cout << "Недостаточно товара или неверное число!" << endl;
+    throw AppException(ExceptionType::Range,
+                       "Недостаточно товара или неверное количество.");
   }
 }
 
@@ -66,7 +91,6 @@ void product::show_info() const {
   cout << "===========================" << endl;
 }
 
-// ===== ПЕРЕГРУЗКИ ОПЕРАТОРОВ СРАВНЕНИЯ =====
 bool product::operator==(const product& other) const {
   return name == other.name &&
          type == other.type &&
@@ -78,7 +102,6 @@ bool product::operator!=(const product& other) const {
   return !(*this == other);
 }
 
-// Сравнение по имени, затем по цене
 bool product::operator<(const product& other) const {
   if (name != other.name) {
     return name < other.name;
@@ -98,7 +121,6 @@ bool product::operator>=(const product& other) const {
   return *this > other || *this == other;
 }
 
-// ===== ДРУЖЕСТВЕННЫЕ ФУНКЦИИ ВВОДА/ВЫВОДА =====
 ostream& operator<<(ostream& os, const product& prod) {
   os << "[ " << prod.name << " | " << prod.type 
      << " | Цена: " << prod.price << " руб. | Кол-во: " << prod.count << " шт. ]";
@@ -111,13 +133,25 @@ istream& operator>>(istream& is, product& prod) {
   int count;
 
   cout << "Введите название товара: ";
-  is >> name;
+  if (!(is >> name)) {
+    throw AppException(ExceptionType::Input,
+                       "Название товара обязательно для ввода.");
+  }
   cout << "Введите тип товара: ";
-  is >> type;
+  if (!(is >> type)) {
+    throw AppException(ExceptionType::Input,
+                       "Тип товара обязателен для ввода.");
+  }
   cout << "Введите цену: ";
-  is >> price;
+  if (!(is >> price)) {
+    throw AppException(ExceptionType::Input,
+                       "Цена должна быть числом.");
+  }
   cout << "Введите количество: ";
-  is >> count;
+  if (!(is >> count)) {
+    throw AppException(ExceptionType::Input,
+                       "Количество должно быть целым числом.");
+  }
 
   prod.set_name(name);
   prod.set_type(type);
